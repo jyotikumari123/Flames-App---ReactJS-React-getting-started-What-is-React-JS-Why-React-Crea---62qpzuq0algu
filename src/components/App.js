@@ -46,7 +46,7 @@ class App extends Component{
           this.setState({data})
           return
     }else if(this.state.data.name1.length && this.state.data.name2.length){
-        let count = this.match(this.state.data.name1,this.state.data.name2);
+        let count = this.state.data.name1.length+this.state.data.name2.length-(this.match(this.state.data.name1,this.state.data.name2)*2)
         let answer;
         if(count%6==1){
             answer = "Friends"
