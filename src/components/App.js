@@ -1,87 +1,118 @@
 import React, {Component, useState} from "react";
 import '../styles/App.css';
 
-class App extends Component{
-  state = {
-    data : {name1:'',
-      name2:'',
-      answer:''}
-  }
+class App extends Component {
 
-  handleChange = (e) => {
-        const data = {...this.state.data}
-        data[e.currentTarget.name] = e.currentTarget.value;
-        this.setState({data})
-  }
-
-  match = (s1,s2) => {
-      let count = 0
-      let dict = {}
-      for (let i=0;i<s1.length;i++){
-          if(s1[i] in dict){
-              dict[s1[i]]+=1
-          }else{
-              dict[s1[i]] = 1
-          }
-      }
-      for (let j=0;j<s2.length;j++){
-          if(s2[j] in dict){
-              dict[s2[j]]-=1
-              count+=1
-          }
-          if(dict[s2[j]]==0){
-              delete dict[s2[j]]
-          }
-      }
-      return count
-  }
-
-  handleClick = e => {
-    if(e.currentTarget.name == 'clear'){
-          const data = {
-              name1:'',
-              name2:'',
-              answer:''
-          }
-          this.setState({data})
-          return
-    }else if(this.state.data.name1.length && this.state.data.name2.length){
-        let count = this.state.data.name1.length+this.state.data.name2.length-(this.match(this.state.data.name1,this.state.data.name2)*2)
-        let answer;
-        if(count%6==1){
-            answer = "Friends"
-        }else if(count%6==2){
-            answer = "Love"
-        }else if(count%6==3){
-            answer = "Affection"
-        }else if(count%6==4){
-            answer = "Marriage"
-        }else if(count%6==5){
-            answer = "Enemy"
-        }else{
-            answer = "Siblings"
+      constructor(props){
+        super(props);
+        this.state={
+            firstName:'',
+            secondName:'',
+            result:''
         }
-        const data = {...this.state.data}
-        data.answer = answer
-        this.setState({data})
-    }else{
-        const data = {...this.state.data}
-        data.answer = 'Please Enter valid input'
-        this.setState({data})
-    }
-  }
+        this.onChangeHandler = this.onChangeHandler.bind(this);
+        this.onClear = this.onClear.bind(this);
+        this.onCalculateHandler = this.onCalculateHandler.bind(this);
+        this.matching = this.matching.bind(this);
+      }
 
-  render(){
-    return(
-        <div>
-          <input data-testid="input1" value={this.state.data.name1} onChange={this.handleChange} type="text" name="name1" placeholder={'Enter first name'}/>
-          <input data-testid="input2" value={this.state.data.name2} onChange={this.handleChange} type="text" name="name2" placeholder={'Enter second name'}/>
-          <button data-testid="calculate_relationship" onClick={this.handleClick} name="calculate_relationship">Calculate Relationship Future</button>
-          <button data-testid="clear" onClick={this.handleClick} name="clear">Clear</button>
-          <h3 data-testid="answer">{this.state.data.answer}</h3>
-        </div>
-    )
-  }
+      onChangeHandler(event){
+         let list = {...this.state};
+         list[event.target.name] = event.target.value;
+         this.setState(list);
+      }
+
+      matching(s1,s2){
+        let obj={};
+        let count=0;
+        for(let i=0;i<s1.length;i++){
+            if(obj[s1[i]]){
+                obj[s1[i]]+=1;
+            }
+            else{
+                obj[s1[i]]=1;
+            }
+        }
+
+        for(let i=0;i<s2.length;i++){
+            if(obj[s2[i]]){
+                obj[s2[i]]-=1;
+                count++;
+            }
+            if(obj[s2[i]]==0){
+                delete obj[s2[i]];
+            }
+        }
+        return count;
+
+      }
+
+      onCalculateHandler(){
+             if(!this.state.firstName || !this.state.secondName){
+                this.setState({
+                    ...this.state,
+                    result:"Please Enter valid input"
+                })
+             }else{
+                let result = (this.state.firstName.length+this.state.secondName.length)-(this.matching(this.state.firstName,this.state.secondName)*2);
+                if(result%6==1){
+                    this.setState({
+                        ...this.state,
+                        result:"Friends"
+                    })
+                }
+                else if(result%6==2){
+                    this.setState({
+                        ...this.state,
+                        result:"Love"
+                    })
+                }
+                else if(result%6==3){
+                    this.setState({
+                        ...this.state,
+                        result:"Affection"
+                    })
+                }
+                else if(result%6==4){
+                    this.setState({
+                        ...this.state,
+                        result:"Marriage"
+                    })
+                }
+                else if(result%6==5){
+                    this.setState({
+                        ...this.state,
+                        result:"Enemy"
+                    })
+                }else{
+                    this.setState({
+                        ...this.state,
+                        result:"Siblings"
+                    })
+                }
+             }   
+      }
+
+      onClear(){
+        this.setState({
+            firstName:'',
+            secondName:'',
+            result:''
+        });
+      }
+
+    render() {
+        return(
+            <div id="main">
+               {/* Do not remove the main div */}
+               <h3 data-testid="answer">{this.state.result}</h3>
+               First Name:  <input type="text" name="firstName" onChange={this.onChangeHandler} value={this.state.firstName} data-testid="input1"/>
+               Second Name: <input type="text" name="secondName" onChange={this.onChangeHandler} value={this.state.secondName} data-testid="input2"/>
+               <button onClick={this.onCalculateHandler} data-testid="calculate_relationship">Calculate Relationship Future</button>
+               <button onClick={this.onClear} data-testid="clear">Clear inputs and relationship status</button>
+            </div>
+        )
+    }
 }
 
 

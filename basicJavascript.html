@@ -1,0 +1,40 @@
+<script>
+    let input = "akash";
+    let obj={};
+    //checking key
+    // console.log(obj.a);
+    // console.log(obj['a']); - this approach
+    for(let i=0;i<input.length;i++){
+        //obj['a']
+        if(obj[input[i]]){
+              obj[input[i]]+=1;
+               // obj{
+              //  a:2
+              // }
+        }
+        else{
+            // obj{
+            //     a:1
+            // }
+            obj[input[i]] = 1;
+        }
+    }
+    console.log(obj);
+</script>
+
+<!-- <script>
+    let input = "akash";
+    let obj={};
+    //checking key
+    // console.log(obj.a);
+    // console.log(obj['a']); - this approach
+    for(let i=0;i<input.length;i++){
+        if(input[i] in obj){
+              obj[input[i]]+=1;
+        }
+        else{
+            obj[input[i]] = 1;
+        }
+    }
+    console.log(obj);
+</script> -->
